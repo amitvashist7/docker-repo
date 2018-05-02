@@ -1,0 +1,260 @@
+Docker
+======>
+
+# yum remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-selinux \
+                  docker-engine-selinux \
+                  docker-engine
+
+
+# yum install epel-release -y
+
+# yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+				  
+# yum install -y yum-utils  device-mapper-persistent-data  lvm2
+
+# yum-config-manager --enable docker-ce-edge
+
+# yum install docker-ce -y 
+
+# systemctl start docker
+
+# vi dockerfile
+
+	# Use an official Python runtime as a parent image
+	FROM python:2.7-slim
+
+	# Set the working directory to /app
+	WORKDIR /app
+
+	# Copy the current directory contents into the container at /app
+	ADD . /app
+
+	# Install any needed packages specified in requirements.txt
+	RUN pip install --trusted-host pypi.python.org -r requirements.txt
+
+	# Make port 80 available to the world outside this container
+	EXPOSE 80
+
+	# Define environment variable
+	ENV NAME World
+
+	# Run app.py when the container launches
+	CMD ["python", "app.py"]
+	
+[root@acs dev-env]# cat requirements.txt
+Flask
+Redis
+[root@acs dev-env]#
+
+[root@acs dev-env]# cat app.py
+from flask import Flask
+from redis import Redis, RedisError
+import os
+import socket
+
+# Connect to Redis
+redis = Redis(host="redis", db=0, socket_connect_timeout=2, socket_timeout=2)
+
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+    try:
+        visits = redis.incr("counter")
+    except RedisError:
+        visits = "<i>cannot connect to Redis, counter disabled</i>"
+
+    html = "<h3>Hello {name}!</h3>" \
+           "<b>Hostname:</b> {hostname}<br/>" \
+           "<b>Visits:</b> {visits}"
+    return html.format(name=os.getenv("NAME", "world"), hostname=socket.gethostname(), visits=visits)
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=80)
+[root@acs dev-env]#
+
+
+
+# docker build -t friendlyhello .
+
+# docker run -p 4000:80 friendlyhello
+
+#  curl localhost:4000
+
+# docker login
+
+[root@acs dev-env]# docker tag friendlyhello amitvashist7/get-started:part2
+[root@acs dev-env]# docker image ls
+REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
+amitvashist7/get-started   part2               57e8a5853476        4 minutes ago       156MB
+friendlyhello              latest              57e8a5853476        4 minutes ago       156MB
+python                     2.7-slim            829e955d463b        5 days ago          144MB
+[root@acs dev-env]#
+
+
+# [root@acs dev-env]# docker push amitvashist7/get-started:part2
+
+
+Install Docker Compose:
+
+# sudo curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+
+# chmod +x /usr/local/bin/docker-compose
+
+[root@acs dev-env]# cat docker-compose.yml                                
+  version: "3"                                                              
+  services:                                                                 
+    web:                                                                    
+      # replace username/repo:tag with your name and image details          
+      image: amitvashist7/get-started:part2                                 
+      deploy:                                                               
+        replicas: 5                                                         
+        resources:                                                          
+          limits:                                                           
+            cpus: "0.1"                                                     
+            memory: 50M                                                     
+        restart_policy:                                                     
+          condition: on-failure                                             
+      ports:                                                                
+        - "80:80"                                                           
+      networks:                                                             
+        - webnet                                                            
+  networks:                                                                 
+    webnet:                                                                 
+  [root@acs dev-env]#         
+
+
+
+
+
+Docker Swarm: 
+
+[root@acs dev-env]# docker swarm init --advertise-addr 172.31.0.50
+Swarm initialized: current node (e998bp1380ajdofjudaeg401f) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-60gnux0pamiw99unlunj9e3jo9j0icwv7j6krehhetjufpvrwg-ctncvnj8sulr1q9q480ulfahw 172.31.0.50:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+
+[root@acs dev-env]#
+
+
+
+[root@worker01 ~]# docker swarm join --token SWMTKN-1-60gnux0pamiw99unlunj9e3jo9j0icwv7j6krehhetjufpvr wg-ctncvnj8sulr1q9q480ulfahw 172.31.0.50:2377
+This node joined a swarm as a worker.
+[root@worker01 ~]#
+
+
+[root@acs dev-env]# docker stack deploy -c docker-compose.yml getstartedlab
+Creating network getstartedlab_webnet
+Creating service getstartedlab_web
+[root@acs dev-env]#
+
+
+[root@acs dev-env]# docker service ls
+ID                  NAME                MODE                REPLICAS            IMAGE
+          PORTS
+v0wuveumqqld        getstartedlab_web   replicated          5/5                 amitvashist7/get-started:part2   *:80->80/tcp
+[root@acs dev-env]#
+
+[root@acs dev-env]# docker service ps getstartedlab_web
+ID                  NAME                  IMAGE                            NODE                DESIRED STATE       CURRENT STATE                ERROR               PORTS
+s885y0of9n7x        getstartedlab_web.1   amitvashist7/get-started:part2   worker02            Running
+            Running 48 seconds ago
+spm768ww27x2        getstartedlab_web.2   amitvashist7/get-started:part2   worker01            Running
+            Running 47 seconds ago
+m3phnmdqytq8        getstartedlab_web.3   amitvashist7/get-started:part2   worker02            Running
+            Running 46 seconds ago
+yiqgcwbhokb2        getstartedlab_web.4   amitvashist7/get-started:part2   acs                 Running
+            Running about a minute ago
+wigvj19fcc0l        getstartedlab_web.5   amitvashist7/get-started:part2   worker01            Running
+            Running 48 seconds ago
+[root@acs dev-env]#
+
+
+[root@acs dev-env]# docker service scale getstartedlab_web=2
+
+
+
+Take down the app and the swarm
+Take the app down with docker stack rm:
+
+# docker stack rm getstartedlab
+Take down the swarm.
+
+# docker swarm leave --force
+
+
+
+Add a new service and redeploy
+
+[root@acs new-app-deploy]# cat docker-compose.yml
+version: "3"
+services:
+  web:
+    # replace username/repo:tag with your name and image details
+    image: amitvashist7/get-started:part2
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 200M
+    ports:
+      - "80:80"
+    networks:
+      - webnet
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - webnet
+networks:
+  webnet:
+[root@acs new-app-deploy]#  
+  
+  
+# docker stack deploy -c docker-compose.yml getstartedlab  
+  
+[root@acs new-app-deploy]# docker service scale getstartedlab_web=10
+getstartedlab_web scaled to 10
+overall progress: 10 out of 10 tasks
+1/10: running
+2/10: running
+3/10: running
+4/10: running
+5/10: running
+6/10: running
+7/10: running
+8/10: running
+9/10: running
+10/10: running
+verify: Service converged
+[root@acs new-app-deploy]# docker service scale getstartedlab_web=2
+getstartedlab_web scaled to 2
+overall progress: 2 out of 2 tasks
+1/2: running
+2/2: running
+verify: Service converged
+[root@acs new-app-deploy]#  
+
+Done.
