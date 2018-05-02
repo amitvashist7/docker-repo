@@ -1,0 +1,5 @@
+FROM java:8
+WORKDIR /
+ADD atmosphere.jar atmosphere.jar
+EXPOSE 8080
+CMD java -jar atmosphere.jar
