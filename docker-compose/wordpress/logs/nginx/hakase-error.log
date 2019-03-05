@@ -1,0 +1,1 @@
+2019/03/05 11:03:14 [error] 6#6: *1 directory index of "/var/www/html/" is forbidden, client: 202.174.93.15, server: wp-hakase.co, request: "GET / HTTP/1.1", host: "34.73.100.11"

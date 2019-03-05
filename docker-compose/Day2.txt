@@ -1,0 +1,327 @@
+    1  cat /etc/*-release
+    2  apt-get update
+    3  apt-get install     apt-transport-https     ca-certificates     curl     gnupg-agent     software-properties-common
+    4  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    5  add-apt-repository    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+    6     $(lsb_release -cs) \
+    7     stable"
+    8  apt-get update 
+    9  apt-get install docker-ce docker-ce-cli containerd.io -y 
+   10  docker version 
+   11  history 
+   12  docker version 
+   13  docker run ubuntu echo "Welcome to the World of Docker"
+   14  docker images 
+   15  docker ps -a 
+   16  docker run ubuntu echo "Welcome to the World of Docker v2"
+   17  docker ps -a 
+   18  echo  "My Name is Amit"
+   19  docker run busybox echo "Amit"
+   20  ls
+   21  docker pull amitvashist7/apache-ex4:latest
+   22  docker pull amitvashist7/apache
+   23  docker pull amitvashist7/http-echo
+   24  docker login 
+   25  docker pull amitvashist7/apache-ex4:latest
+   26  docker logout
+   27  cd /var/lib/docker
+   28  ls
+   29  cd image/
+   30  ls
+   31  cd overlay2/
+   32  ls
+   33  cd imagedb/
+   34  ls
+   35  cd content/
+   36  ls
+   37  cd sha256/
+   38  ls
+   39  pwd
+   40  file 47b19964fb500f3158ae57f20d16d8784cc4af37c52c49d3b4f5bc5eede49541
+   41  ls
+   42  ls -l
+   43  cat 47b19964fb500f3158ae57f20d16d8784cc4af37c52c49d3b4f5bc5eede49541 
+   44  ls
+   45  cd ..
+   46  cd ../../
+   47  cd ../
+   48  ls
+   49  cd ../
+   50  ls
+   51  cd containers/
+   52  ls
+   53  cd 016a3ea51cfb13ccd4b6dd2c626c8bc2f37264ef79a9dbb527ad3845be402d2c/
+   54  ls
+   55  cat hostname 
+   56  docker ps -a
+   57  cd 
+   58  docker images 
+   59  docker search centos 
+   60  docker pull centos 
+   61  docker images 
+   62  docker tag busybox  amitvashist7/busybox:v1
+   63  docker images 
+   64  docker push amitvashist7/busybox:v1
+   65  docker login 
+   66  docker push amitvashist7/busybox:v1
+   67  docker ps 
+   68  docker ps -a
+   69  docker ps -aq
+   70  ls
+   71  docker ps -a 
+   72  uname -a 
+   73  docker run -it ubuntu
+   74  docker run -it centos 
+   75  docker ps 
+   76  docker run -itd --name job1 centos  /bin/bash 
+   77  docker ps 
+   78  docker attach  job1
+   79  docker ps 
+   80  docker kill c4147d6d8a7c        
+   81  docker ps -qa
+   82  docker kill $(docker ps -qa)
+   83  docker ps 
+   84  docker ps -a 
+   85  docker start job1
+   86  docker ps 
+   87  docker stop job1
+   88  docker kill $(docker ps -qa)
+   89  docker rm $(docker ps -qa)
+   90  docker ps -a 
+   91  docker images
+   92  history > Day1.txt
+   93  history 
+   94  docker images 
+   95  history 
+   96  docker images 
+   97  docker run -it centos /bin/bash
+   98  docker ps 
+   99  docker inspect 4888e540c299        
+  100  curl 172.17.0.2
+  101  docker ps 
+  102  docker attach 4888e540c299        
+  103  curl 172.17.0.2
+  104  docker attach 4888e540c299        
+  105  docker ps 
+  106  docker commit -p -m "My HTTPD Image" 4888e540c299  centos-httpd:v1
+  107  docker images 
+  108  docker run -itd centos-httpd:v1
+  109  docker ps 
+  110  docker inspect 765f423c38bb        
+  111  curl 172.17.0.3
+  112  curl 172.17.0.2
+  113  docker attach 4888e540c299
+  114  docker commit -p -m "My HTTPD Image v2" 4888e540c299  centos-httpd:v2
+  115  docker images 
+  116  curl 172.17.0.2
+  117  curl 172.17.0.3
+  118  docker run -itd centos-httpd:v2
+  119  curl 172.17.0.4
+  120  history 
+  121  docker images 
+  122  docker rmi centos 
+  123  docker history centos-httpd:v1
+  124  ls
+  125  mkdir docker-images 
+  126  cd docker-images/
+  127  mkdir  apache 
+  128  ls
+  129  cd apache/
+  130  ls
+  131  vim Dockerfile
+  132  docker build -t ubuntu-apache:v1 .
+  133  ls
+  134  docker ps -a 
+  135  docker kill $(docker ps -aq)
+  136  docker rm $(docker ps -aq)
+  137  ls
+  138  docker images 
+  139  docker run -d ubuntu-apache:v1
+  140  docker ps - a
+  141  docker ps 
+  142  docker inspect 0ca775ee004f        
+  143  curl 172.17.0.2
+  144  cat Dockerfile 
+  145  vim Dockerfile 
+  146  docker build -t ubuntu-apache:v2 .
+  147  docker images 
+  148  docker run -d ubuntu-apache:v2
+  149  docker ps 
+  150  cat Dockerfi
+  151  cat Dockerfile 
+  152  lls
+  153  ls
+  154  vim abc.html
+  155  ls
+  156  vim Dockerfile 
+  157  ls
+  158  cp -rf Dockerfile /tmp/my-dockerrfile
+  159  ls
+  160  docker build -t ubuntu-apache:v3 -f /tmp/my-dockerrfile  .
+  161  docker images
+  162  docker run -d ubuntu-apache:v3
+  163  docker ps -a 
+  164  docker ps
+  165  docker inspect f182136a4c3e        
+  166  curl 172.17.0.4
+  167  ls
+  168  vim abc.html 
+  169  docker build -t ubuntu-apache:v4 -f /tmp/my-dockerrfile  .
+  170  docker run -d ubuntu-apache:v4
+  171  curl 172.17.0.4
+  172  curl 172.17.0.5
+  173  curl 172.17.0.2
+  174  curl 172.17.0.4
+  175  curl 172.17.0.5
+  176  docker images
+  177  dockerer login 
+  178  docker login
+  179  ls
+  180  docker tag amitvashist7/
+  181  docker tag  ubuntu-apache:v4 amitvashist7/gl-ubuntu-apache:latest
+  182  docker push amitvashist7/gl-ubuntu-apache:latest
+  183  docker kill $(docker ps -qa)
+  184  docker rm $(docker ps -qa)
+  185  docker images 
+  186  docker images -1
+  187  docker images -q
+  188  docker rmi $(docker images -q)
+  189  docker rmi $(docker images -q) --force 
+  190  docker images 
+  191  docker push amitvashist7/gl-iubuntu-apache:latest
+  192  docker run -d  amitvashist7/gl-iubuntu-apache:latest
+  193  docker run -d  amitvashist7/gl-ubuntu-apache:latest
+  194  docker images
+  195  curl 172.71.0.2
+  196  docker ps 
+  197  docker inspect dc9e20dceecd        
+  198  curl 172.17.0.2
+  199  docker pull ubuntu:16.04
+  200  docker images 
+  201  cat /tmp/my-dockerrfile 
+  202  history 
+  203  cat /tmp/my-dockerrfile 
+  204  history 
+  205  docker volume ls 
+  206  docker container ls 
+  207  docker ps -a 
+  208  ls
+  209  docker run --name alpha -it -v /var/log/busybox busybox /bin/sh
+  210  docker volume ls 
+  211  docker ps 
+  212  docker inspect d60daaa1df8a        | grep -i volumes
+  213  cat /var/lib/docker/volumes/235d885e91ba40c3090da22b8dced2d88c523268b24396c56e30fa6fea15db76/_data/timenow 
+  214  docker run --volume-from alpha ubuntu /bin/bash
+  215  docker run --volumes-from alpha ubuntu /bin/bash
+  216  docker run -it --volumes-from alpha ubuntu /bin/bash
+  217  cat /var/lib/docker/volumes/235d885e91ba40c3090da22b8dced2d88c523268b24396c56e30fa6fea15db76/_data/timenow 
+  218  date >> /var/lib/docker/volumes/235d885e91ba40c3090da22b8dced2d88c523268b24396c56e30fa6fea15db76/_data/timenow
+  219  hostname >> /var/lib/docker/volumes/235d885e91ba40c3090da22b8dced2d88c523268b24396c56e30fa6fea15db76/_data/test.txt 
+  220  docker ps 
+  221  docker attach 434b9fd2f1f3        
+  222  ls
+  223  docker run --name docker-test01 -it -v /root/docker-images/:/docker busybox /bin/sh
+  224  cat docker-images/apache/abc.html 
+  225  docker run --name docker-test02 -it -v /root/docker-images/:/docker:ro busybox /bin/sh
+  226  history 
+  227  ls
+  228  docker network ls 
+  229  docker network inspect 40d0b2e1ffad        
+  230  docker kill $(docker ps -aq)
+  231  docker network inspect 40d0b2e1ffad        
+  232  ip addr 
+  233  docker images 
+  234  docker run -d -P 8080:80 amitvashist7/gl-ubuntu-apache:latest
+  235  docker run -d -p 8080:80 amitvashist7/gl-ubuntu-apache:latest
+  236  docker ps 
+  237  docker network inspect 40d0b2e1ffad        
+  238  curl 172.17.0.2
+  239  curl localhost
+  240  curl localhost:8080
+  241  docker run -d -p 8081:80 amitvashist7/gl-ubuntu-apache:latest
+  242  curl localhost:8081
+  243  docker ps 
+  244  ls
+  245  docker network ls 
+  246  docker network create --driver=bridge --subnet=192.168.0.0/16 --ip-range=192.168.5.0/24 --gateway=192.168.5.254 mybr0
+  247  docker network ls 
+  248  docker inspect mybr0               
+  249  docker run --name test-net-01 -d -p 8081:80 --network mybr0 amitvashist7/gl-ubuntu-apache:latest
+  250  docker run --name test-net-01 -d -p 8082:80 --network mybr0 amitvashist7/gl-ubuntu-apache:latest
+  251  docker run --name test-net-02 -d -p 8083:80 --network mybr0 amitvashist7/gl-ubuntu-apache:latest
+  252  docker ps 
+  253  docker inspect test-net-02 
+  254  curl 192.168.5.0
+  255  ls
+  256  git clone  https://github.com/amitvashist7/docker-repo.git
+  257  ls
+  258  cd docker-repo/
+  259  ls
+  260  cd docker-compose/
+  261  ls
+  262  cd hello-world/
+  263  ls
+  264  curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  265  chmod +x /usr/local/bin/docker-compose
+  266  docker-compose version 
+  267  ls
+  268  vim docker-compose.yml 
+  269  docker images 
+  270  vim docker-compose.yml 
+  271  docker-compose up 
+  272  docker-compose up -d 
+  273  docker ps 
+  274  docker-compose down
+  275  ls
+  276  cd ..
+  277  ls
+  278  cd wordpress/
+  279  ls
+  280  cat docker-compose.yml 
+  281  vim docker-compose.yml 
+  282  ls
+  283  cd nginx/
+  284  ls
+  285  cat wordpress.conf 
+  286  docker-compose up -d 
+  287  docker ps 
+  288  docker-compose ps 
+  289  apt-get install mysql-client 
+  290  docker-compose ps 
+  291  mysql -u root -p mysql -P 3306
+  292  mysql -u root -p mysql -h localhost -P 3306
+  293  ls
+  294  cd ..
+  295  ls
+  296  cat docker-compose.yml 
+  297  mysql -u root  -h localhost -P 3306
+  298  mysql -u root -p mysql -h localhost -P 3306
+  299  mysql -u mysql -p mysql -h localhost -P 3306
+  300  docker images 
+  301  docker ps 
+  302  docker inspect wordpress_mysql_1
+  303  mysql -u root -p mysql -h 172.17.0.4 -P 3306
+  304  mysql -u root -p aqwe123 -h 172.17.0.4 -P 3306
+  305  mysql -u root -p mysql -h 172.17.0.4 -P 3306
+  306  mysql -u root -h 172.17.0.4 -P 3306
+  307  mysql -u root -p -h 172.17.0.4 -P 3306
+  308  mysql -h 172.17.0.4 -P 3306 --protocol=TCP -u root -p
+  309  ls
+  310  cd logs/
+  311  ls
+  312  cd nginx/
+  313  ls
+  314  tail -f access.log 
+  315  ls
+  316  ls -ltr 
+  317  tail -f hakase-access.log 
+  318  docker-compose ps 
+  319  ls
+  320  cd ..
+  321  ls
+  322  cd ..
+  323  ls
+  324  cd ..
+  325  ls
+  326  cd docker-compose/
+  327  history >> Day2.txt

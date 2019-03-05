@@ -1,0 +1,92 @@
+    1  cat /etc/*-release
+    2  apt-get update
+    3  apt-get install     apt-transport-https     ca-certificates     curl     gnupg-agent     software-properties-common
+    4  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    5  add-apt-repository    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+    6     $(lsb_release -cs) \
+    7     stable"
+    8  apt-get update 
+    9  apt-get install docker-ce docker-ce-cli containerd.io -y 
+   10  docker version 
+   11  history 
+   12  docker version 
+   13  docker run ubuntu echo "Welcome to the World of Docker"
+   14  docker images 
+   15  docker ps -a 
+   16  docker run ubuntu echo "Welcome to the World of Docker v2"
+   17  docker ps -a 
+   18  echo  "My Name is Amit"
+   19  docker run busybox echo "Amit"
+   20  ls
+   21  docker pull amitvashist7/apache-ex4:latest
+   22  docker pull amitvashist7/apache
+   23  docker pull amitvashist7/http-echo
+   24  docker login 
+   25  docker pull amitvashist7/apache-ex4:latest
+   26  docker logout
+   27  cd /var/lib/docker
+   28  ls
+   29  cd image/
+   30  ls
+   31  cd overlay2/
+   32  ls
+   33  cd imagedb/
+   34  ls
+   35  cd content/
+   36  ls
+   37  cd sha256/
+   38  ls
+   39  pwd
+   40  file 47b19964fb500f3158ae57f20d16d8784cc4af37c52c49d3b4f5bc5eede49541
+   41  ls
+   42  ls -l
+   43  cat 47b19964fb500f3158ae57f20d16d8784cc4af37c52c49d3b4f5bc5eede49541 
+   44  ls
+   45  cd ..
+   46  cd ../../
+   47  cd ../
+   48  ls
+   49  cd ../
+   50  ls
+   51  cd containers/
+   52  ls
+   53  cd 016a3ea51cfb13ccd4b6dd2c626c8bc2f37264ef79a9dbb527ad3845be402d2c/
+   54  ls
+   55  cat hostname 
+   56  docker ps -a
+   57  cd 
+   58  docker images 
+   59  docker search centos 
+   60  docker pull centos 
+   61  docker images 
+   62  docker tag busybox  amitvashist7/busybox:v1
+   63  docker images 
+   64  docker push amitvashist7/busybox:v1
+   65  docker login 
+   66  docker push amitvashist7/busybox:v1
+   67  docker ps 
+   68  docker ps -a
+   69  docker ps -aq
+   70  ls
+   71  docker ps -a 
+   72  uname -a 
+   73  docker run -it ubuntu
+   74  docker run -it centos 
+   75  docker ps 
+   76  docker run -itd --name job1 centos  /bin/bash 
+   77  docker ps 
+   78  docker attach  job1
+   79  docker ps 
+   80  docker kill c4147d6d8a7c        
+   81  docker ps -qa
+   82  docker kill $(docker ps -qa)
+   83  docker ps 
+   84  docker ps -a 
+   85  docker start job1
+   86  docker ps 
+   87  docker stop job1
+   88  docker kill $(docker ps -qa)
+   89  docker rm $(docker ps -qa)
+   90  docker ps -a 
+   91  docker images
+   92  history > Day1.txt

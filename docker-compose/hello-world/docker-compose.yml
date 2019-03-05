@@ -1,2 +1,2 @@
 my-test:
-  image: hello-world
+  image: amitvashist7/gl-ubuntu-apache:latest
